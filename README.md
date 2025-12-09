@@ -64,8 +64,8 @@ Sistema de generación de códigos QR para pagos con Yappy implementado con **Cl
 
 **1. Clonar el repositorio**
 ```bash
-git clone <repository-url>
-cd yappy2
+git clone https://github.com/saulmoralespa/yapppy-cajas
+cd yapppy-cajas
 ```
 
 **2. Instalar dependencias**
@@ -1688,31 +1688,12 @@ YAPPY_ID_GROUP=required
 
 ### Versión 1.1 (En Progreso)
 
-- [x] **Tests de Domain Layer** (DTOs, Entities, Use Cases) ✅
-- [ ] Tests de Use Cases restantes (GenerateQRCode, GetTransaction, CancelTransaction)
+- ✅ **Tests de Domain Layer** (DTOs, Entities, Use Cases)
+- ✅ Tests de Use Cases restantes (GenerateQRCode, GetTransaction, CancelTransaction)
 - [ ] Tests de integración (JsonSessionRepository)
 - [ ] Tests de API (endpoints con supertest)
-- [ ] CI/CD con GitHub Actions
+- ✅ CI/CD con GitHub Actions
 - [ ] Cobertura de código ≥ 80%
-
-### Versión 1.2 (Planeado)
-
-- [ ] Webhook para notificaciones de pago
-- [ ] Dashboard de transacciones
-- [ ] Exportación a CSV/Excel
-- [ ] Tests E2E con Playwright
-- [ ] Dockerización completa
-- [ ] Métricas con Prometheus
-
-### Versión 2.0 (Futuro)
-
-- [ ] Integración con otros gateways (Stripe, PayPal)
-- [ ] Modo multi-tenant
-- [ ] Autenticación OAuth2
-- [ ] Rate limiting con Redis
-- [ ] Caché con Redis
-- [ ] GraphQL API
-- [ ] WebSockets para estado en tiempo real
 
 ---
 
@@ -1743,8 +1724,9 @@ Las contribuciones son bienvenidas. Por favor:
 
 ## 📞 Soporte
 
+[saulmoralespa.com](https://saulmoralespa.com)
+[LinkedIn](https://www.linkedin.com/in/saulmoralespa)
+
 ---
 
 **Desarrollado con ❤️ usando Clean Architecture y TypeScript**
-
-*Última actualización: Diciembre 8, 2025*
