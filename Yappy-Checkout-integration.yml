@@ -1,0 +1,712 @@
+openapi: 3.0.0
+info:
+  version: 1.1.1
+  title: Yappy - Checkout Integration
+  description: Checkout Integration services for Yappy+
+  contact:
+    name: Bank Integration Team
+    email: integracionesdev@yappy.com.pa
+servers:
+  - url: /checkout
+    description: Relative global path
+tags:
+  - name: Session
+  - name: Transaction
+  - name: QR
+paths:
+  /session/device:
+    post:
+      summary: Method to open devices for execute transactions
+      security:
+        - api-key: []
+        - secret-key: []
+      tags:
+        - Session
+      description: Allow open/active a specific devices to initialize operations
+      operationId: open-box
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                body:
+                  $ref: '#/components/schemas/OpenRequest'
+      responses:
+        '200':
+          description: Success response
+          headers:
+            ip:
+              $ref: '#/components/headers/Ip'
+            date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenResponse'
+        '400':
+          description: Functional Error
+          headers:
+            ip:
+              $ref: '#/components/headers/Ip'
+            date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ErrorDescription'
+                  - $ref: '#/components/schemas/ErrorCreateToken'
+                  - $ref: '#/components/schemas/ErrorOpenDevice'
+                  - $ref: '#/components/schemas/ErrorOpenDeviceStatus'
+                  - $ref: '#/components/schemas/ErrorTimeOut'
+        '404':
+          description: Not Found
+          headers:
+            ip:
+              $ref: '#/components/headers/Ip'
+            date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+        '409':
+          description: Conflict Data
+          headers:
+            ip:
+              $ref: '#/components/headers/Ip'
+            date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorConflicData'
+        '500':
+          description: General Error
+          headers:
+            ip:
+              $ref: '#/components/headers/Ip'
+            date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorFailedDescription'
+    delete:
+      summary: Method to close devices for generate transaction reports
+      security:
+        - authorization: []
+        - api-key: []
+        - secret-key: []
+      tags:
+        - Session
+      description: Allow close a specific devices to finalize operations
+      operationId: close-box
+      responses:
+        '200':
+          description: Success response
+          headers:
+            ip:
+              $ref: '#/components/headers/Ip'
+            date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CloseResponse'
+        '400':
+          description: Functional Error
+          headers:
+            ip:
+              $ref: '#/components/headers/Ip'
+            date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ErrorDescription'
+                  - $ref: '#/components/schemas/ErrorCloseDevice'
+                  - $ref: '#/components/schemas/ErrorCloseDeviceStatus'
+                  - $ref: '#/components/schemas/ErrorTimeOut'
+        '500':
+          description: General Error
+          headers:
+            ip:
+              $ref: '#/components/headers/Ip'
+            date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorFailedDescription'
+  /transaction/{transaction_id}:
+    get:
+      summary: Method to query transactions from a device
+      security:
+        - authorization: []
+        - api-key: []
+        - secret-key: []
+      tags:
+        - Transaction
+      description: Allow a method that return infomation to a specific transaction
+      operationId: transaction
+      parameters:
+        - name: transaction_id
+          in: path
+          schema:
+            type: string
+            maxLength: 64
+          required: true
+      responses:
+        '200':
+          description: Success response
+          headers:
+            ip:
+              $ref: '#/components/headers/Ip'
+            date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+        '400':
+          description: Functional Error
+          headers:
+            ip:
+              $ref: '#/components/headers/Ip'
+            date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDescription'
+        '500':
+          description: General Error
+          headers:
+            ip:
+              $ref: '#/components/headers/Ip'
+            date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorFailedDescription'
+    put:
+      summary: Method to return execute transactions from a device
+      security:
+        - authorization: []
+        - api-key: []
+        - secret-key: []
+      tags:
+        - Transaction
+      description: Allow a method that return infomation to a specific transaction
+      operationId: return-transaction
+      parameters:
+        - name: transaction_id
+          in: path
+          schema:
+            type: string
+            maxLength: 64
+          required: true
+      responses:
+        '200':
+          description: Success response
+          headers:
+            ip:
+              $ref: '#/components/headers/Ip'
+            date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReturnTransactionResponse'
+        '400':
+          description: Functional Error
+          headers:
+            ip:
+              $ref: '#/components/headers/Ip'
+            date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDescription'
+        '500':
+          description: General Error
+          headers:
+            ip:
+              $ref: '#/components/headers/Ip'
+            date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorFailedDescription'
+  /qr/generate/{qr_type}:
+    post:
+      summary: Generate QR for transactions
+      security:
+        - authorization: []
+        - api-key: []
+        - secret-key: []
+      tags:
+        - QR
+      description: Allow a method to create QRs for generate transactions
+      operationId: qr
+      parameters:
+        - name: qr_type
+          in: path
+          schema:
+            type: string
+            maxLength: 4
+            enum:
+              - DYN
+              - HYB
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                body:
+                  $ref: '#/components/schemas/QRRequest'
+      responses:
+        '200':
+          description: Success response
+          headers:
+            ip:
+              $ref: '#/components/headers/Ip'
+            date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QRResponse'
+        '400':
+          description: Functional Error
+          headers:
+            ip:
+              $ref: '#/components/headers/Ip'
+            date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ErrorDescription'
+                  - $ref: '#/components/schemas/ErrorAmount'
+        '500':
+          description: General Error
+          headers:
+            ip:
+              $ref: '#/components/headers/Ip'
+            date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorFailedDescription'
+components:
+  securitySchemes:
+    api-key:
+      name: api-key
+      type: apiKey
+      in: header
+      description: Identifier assigned to an API client
+    authorization:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Token with information to authorize
+    secret-key:
+      name: secret-key
+      type: apiKey
+      in: header
+      description: Secret with information to authorize
+  parameters:
+    Ip:
+      in: header
+      name: ip
+      schema:
+        type: string
+        format: ipv4
+      required: true
+    Date:
+      in: header
+      name: date
+      schema:
+        type: string
+        maxLength: 32
+        format: date-time
+        example: '2023-08-07T15:10:23.391Z'
+      required: true
+    TraceId:
+      in: header
+      name: trace_id
+      schema:
+        type: string
+      required: false
+  headers:
+    Ip:
+      schema:
+        type: string
+        format: ipv4
+    Date:
+      schema:
+        type: string
+        maxLength: 32
+        format: date-time
+  schemas:
+    DeviceDTO:
+      type: object
+      description: Device information
+      properties:
+        id:
+          description: identificador
+          type: string
+          maxLength: 100
+          example: ABZPQ-41020274
+        name:
+          description: nombre del dispositivo
+          type: string
+          maxLength: 250
+          example: Caja 1
+        user:
+          description: identificador del cliente
+          type: string
+          maxLength: 250
+          example: Cajas Versalles
+      required:
+        - id
+    AmountDTO:
+      type: object
+      description: Object with the amount details
+      properties:
+        sub_total:
+          description: Sub Total
+          type: number
+          multipleOf: 0.01
+          example: 200.52
+        tax:
+          description: Tax
+          type: number
+          multipleOf: 0.01
+          example: 2.21
+        tip:
+          description: Tip
+          type: number
+          multipleOf: 0.01
+          example: 1.21
+        discount:
+          description: Discount
+          type: number
+          multipleOf: 0.01
+          example: 0.21
+        total:
+          description: Total
+          type: number
+          multipleOf: 0.01
+          example: 203.73
+    SummaryDTO:
+      type: object
+      description: Object with the summary amount details
+      properties:
+        type:
+          type: string
+          maxLength: 32
+          example: COMPLETED
+          enum:
+            - COMPLETED
+            - IN TRANSIT
+            - VOIDED
+        transactions:
+          description: Transactions Quantity
+          type: integer
+          example: 2
+        amount:
+          description: Amount Transactions
+          type: number
+          multipleOf: 0.01
+          example: 2.15
+    OpenRequest:
+      type: object
+      properties:
+        device:
+          $ref: '#/components/schemas/DeviceDTO'
+        group_id:
+          type: string
+          maxLength: 100
+          example: AATGN-44062998
+      required:
+        - device
+        - group_id
+    OpenResponse:
+      type: object
+      properties:
+        body:
+          type: object
+          properties:
+            status:
+              type: string
+              maxLength: 32
+              example: OPEN
+              enum:
+                - OPEN
+                - CLOSED
+                - UNAVAILABLE
+            opened_date:
+              type: string
+              maxLength: 32
+              format: date-time
+              example: '2023-08-07T15:10:23.391Z'
+            token:
+              type: string
+              example: >-
+                X7gcRY48Ypz4sD4YiMdt/tggQXZiNI3vCyiM1jsYsML+wYwftcKkdW7EfwwQ9+OqgMdMEQWDmGnnaaEdWEz1WqH1c0HDr8Yt0qbL2LbDDvs0hLZUujFgTu5mQtMyg4AbDk09hCLbCQK8IPRrY6
+        status:
+          $ref: '#/components/schemas/SuccessDescription'
+      required:
+        - status
+    QRRequest:
+      type: object
+      properties:
+        charge_amount:
+          $ref: '#/components/schemas/AmountDTO'
+        order_id:
+          type: string
+          maxLength: 32
+          example: AUNWQ-79609745
+        description:
+          type: string
+          maxLength: 100
+          example: pa las pintas
+      required:
+        - device
+        - group
+    QRResponse:
+      type: object
+      properties:
+        body:
+          type: object
+          properties:
+            hash:
+              type: string
+              maxLength: 100
+              example: j5AHEj3kY8tI+1LjGliOzLrrBzKwswWY/Kw4A3OjaJNCWRtelmiZ2zDr
+            transaction_id:
+              type: string
+              maxLength: 32
+              example: VRDNF-93260766
+            date:
+              type: string
+              maxLength: 32
+              example: '2023-08-07T15:10:23.391Z'
+        status:
+          $ref: '#/components/schemas/SuccessDescription'
+      required:
+        - status
+    CloseResponse:
+      type: object
+      properties:
+        body:
+          type: object
+          properties:
+            opened_date:
+              type: string
+              maxLength: 32
+              example: '2023-08-07T15:10:23.391Z'
+            closed_date:
+              type: string
+              maxLength: 32
+              example: '2023-08-07T15:10:23.391Z'
+            summary:
+              items:
+                $ref: '#/components/schemas/SummaryDTO'
+        status:
+          $ref: '#/components/schemas/SuccessDescription'
+      required:
+        - status
+    TransactionResponse:
+      type: object
+      properties:
+        body:
+          type: object
+          properties:
+            status:
+              type: string
+              maxLength: 32
+              example: COMPLETED
+              enum:
+                - COMPLETED
+                - PENDING
+                - DECLINED
+                - EXPIRED
+                - FAILED
+                - VOIDED
+        status:
+          $ref: '#/components/schemas/SuccessDescription'
+      required:
+        - status
+    ReturnTransactionResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/SuccessDescription'
+      required:
+        - status
+    SuccessDescription:
+      type: object
+      properties:
+        code:
+          type: string
+          example: YP-0000
+        description:
+          type: string
+          example: Se ha realizado la ejecucion del servicio correctamente
+    ErrorDescription:
+      type: object
+      properties:
+        status:
+          type: object
+          properties:
+            code:
+              type: string
+              example: YP-0002
+            description:
+              type: string
+              example: >-
+                Error, ha ocurrido un error en procesar los datos. Contacte al
+                administrador
+    ErrorNotFound:
+      type: object
+      properties:
+        status:
+          type: object
+          properties:
+            code:
+              type: string
+              example: YP-0009
+            description:
+              type: string
+              example: >-
+                Error, uno o mas campos obligatorios faltantes en el cuerpo de
+                la peticion
+    ErrorCreateToken:
+      type: object
+      properties:
+        status:
+          type: object
+          properties:
+            code:
+              type: string
+              example: YP-0200
+            description:
+              type: string
+              example: >-
+                Error, ha ocurrido un error en procesar los datos. Contacte al
+                administrador
+    ErrorConflicData:
+      type: object
+      properties:
+        status:
+          type: object
+          properties:
+            code:
+              type: string
+              example: YP-0021
+            description:
+              type: string
+              example: 'Error en data: Hay un conflicto de datos'
+    ErrorCloseDevice:
+      type: object
+      properties:
+        status:
+          type: object
+          properties:
+            code:
+              type: string
+              example: YP-0400
+            description:
+              type: string
+              example: Error al Cerrar la caja
+    ErrorCloseDeviceStatus:
+      type: object
+      properties:
+        status:
+          type: object
+          properties:
+            code:
+              type: string
+              maxLength: 32
+              example: YP-0403
+            description:
+              type: string
+              maxLength: 64
+              example: Caja actualmente en estado Cerrada
+    ErrorTimeOut:
+      type: object
+      properties:
+        status:
+          type: object
+          properties:
+            code:
+              type: string
+              example: YP-0006
+            description:
+              type: string
+              example: Error al Abrir la caja
+    ErrorOpenDevice:
+      type: object
+      properties:
+        status:
+          type: object
+          properties:
+            code:
+              type: string
+              example: YP-0401
+            description:
+              type: string
+              example: Error al Abrir la caja
+    ErrorOpenDeviceStatus:
+      type: object
+      properties:
+        status:
+          type: object
+          properties:
+            code:
+              type: string
+              example: YP-0402
+            description:
+              type: string
+              example: Caja actualmente en estado Abierta
+    ErrorAmount:
+      type: object
+      properties:
+        status:
+          type: object
+          properties:
+            code:
+              type: string
+              example: YP-0010
+            description:
+              type: string
+              example: >-
+                Error, uno o mas campos del cuerpo de la peticion no cumplen con
+                los valores enumerados
+    ErrorFailedDescription:
+      type: object
+      properties:
+        status:
+          type: object
+          properties:
+            code:
+              type: string
+              example: YP-9999
+            description:
+              type: string
+              example: >-
+                Error, ha ocurrido un error en procesar los datos. Contacte al
+                administrador
+      required:
+        - status
